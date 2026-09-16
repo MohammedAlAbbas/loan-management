@@ -1,4 +1,5 @@
 namespace loan.management;
+using { managed } from '@sap/cds/common';
 
 // type LoanStatus : String(1) enum {
 //     D @title: 'Draft';
@@ -7,7 +8,7 @@ namespace loan.management;
 //     R @title: 'Rejected';
 // }
 
-entity Employees {
+entity Employees: managed {
     key ID: UUID;
     firstName: String(50);
     lastName: String(50);
@@ -18,12 +19,12 @@ entity Employees {
             on loans.employee = $self;
 }
 
-entity LoanStatuses {
+entity LoanStatuses: managed {
     key code : String(1);
         text : String(50);
 }
 
-entity LoanApplications {
+entity LoanApplications: managed {
     key ID: UUID;
     amount: Decimal(15,2);
     currency: String(3);
