@@ -1,5 +1,6 @@
 const cds = require("@sap/cds");
 const { SELECT, UPDATE } = require("@sap/cds/lib/ql/cds-ql");
+const Constants = require("../util/constants");
 
 module.exports = cds.service.impl(function () {
 
@@ -29,24 +30,22 @@ module.exports = cds.service.impl(function () {
 
     this.on("submitLoan", async (req) => {
 
-        debugger;
-
         const { loanID } = req.data;
         const loan = await SELECT.one
-                            .from("loan-management.LoanApplications")
+                            .from("loan.management.LoanApplications")
                             .where({ ID: loanID });
 
         if(!loan) {
             return req.reject(404, "Loan not found");
         }
 
-        if(loan.status !== "Draft") {
+        if(loan.status_code !== Constants.LoanStatus.DRAFT) {
             return req.reject(400, "Only Draft Loans Can be Submitted");
         }
 
         await UPDATE("loan.management.LoanApplications")
             .set({
-                status: "Submitted"
+                status_code: Constants.LoanStatus.SUBMITTED
             })
             .where({
                 ID: loanID

@@ -6,6 +6,8 @@ service EmployeeService {
 
     entity LoanApplications as projection on db.LoanApplications;
 
+    entity LoanStatuses as projection on db.LoanStatuses;
+
     action submitLoan(loanID: UUID) returns LoanApplications;
 
 }
