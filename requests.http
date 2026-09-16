@@ -1,0 +1,124 @@
+@baseUrl = http://localhost:4004/odata/v4
+
+### Get all employees
+GET {{baseUrl}}/employee/Employees?$expand=loans
+
+### Get selected employee fields
+GET {{baseUrl}}/employee/Employees?$select=ID,firstName,lastName,email
+
+### Get employees from IT
+GET {{baseUrl}}/employee/Employees?$filter=department eq 'IT'
+
+### Get loans greater than 50000
+GET {{baseUrl}}/employee/LoanApplications?$filter=amount gt 50000
+
+### Select and filter loans
+GET {{baseUrl}}/employee/LoanApplications?$select=ID,amount,status&$filter=status eq 'Draft'
+
+### Create employee
+POST {{baseUrl}}/employee/Employees
+Content-Type: application/json
+
+{
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.smith@example.com",
+    "department": "IT"
+}
+
+### Update employee
+PATCH {{baseUrl}}/employee/Employees(33333333-3333-3333-3333-333333333333)
+Content-Type: application/json
+
+{
+    "department": "Finance"
+}
+
+### Delete employee
+DELETE {{baseUrl}}/employee/Employees(22222222-2222-2222-2222-222222222222)
+
+
+
+### Get loan applications
+GET {{baseUrl}}/employee/LoanApplications?$expand=employee
+
+### Create loan application
+POST {{baseUrl}}/employee/LoanApplications
+Content-Type: application/json
+
+{
+    "amount": 50000,
+    "currency": "SAR",
+    "purpose": "Personal Loan",
+    "status": "Draft",
+    "submittedAt": "2026-09-14T12:00:00Z",
+    "employee_ID": "11111111-1111-1111-1111-111111111111"
+}
+
+### Create employee with 3 loan applications
+POST {{baseUrl}}/employee/Employees
+Content-Type: application/json
+
+{
+    "firstName": "Mohammed",
+    "lastName": "Al Abbas",
+    "email": "mohammed.loans@example.com",
+    "department": "IT",
+    "loans": [
+        {
+            "amount": 50000,
+            "currency": "SAR",
+            "purpose": "Personal Loan",
+            "status": "Draft",
+            "submittedAt": "2026-09-15T06:00:00Z"
+        },
+        {
+            "amount": 75000,
+            "currency": "SAR",
+            "purpose": "Home Renovation",
+            "status": "Submitted",
+            "submittedAt": "2026-09-15T06:05:00Z"
+        },
+        {
+            "amount": 30000,
+            "currency": "SAR",
+            "purpose": "Education",
+            "status": "Approved",
+            "submittedAt": "2026-09-15T06:10:00Z"
+        }
+    ]
+}
+
+### Test loan validation
+POST {{baseUrl}}/employee/LoanApplications
+Content-Type: application/json
+
+{
+    "amount": 150000,
+    "currency": "SAR",
+    "purpose": "Personal Loan",
+    "status": "Draft",
+    "submittedAt": "2026-09-15T06:00:00Z",
+    "employee_ID": "11111111-1111-1111-1111-111111111111"
+}
+
+### Valid loan
+POST {{baseUrl}}/employee/LoanApplications
+Content-Type: application/json
+
+{
+    "amount": 50000,
+    "currency": "SAR",
+    "purpose": "Personal Loan",
+    "status": "Draft",
+    "submittedAt": "2026-09-15T06:00:00Z",
+    "employee_ID": "11111111-1111-1111-1111-111111111111"
+}
+
+### Submit Loan
+POST {{baseUrl}}/employee/submitLoan
+Content-Type: application/json
+
+{
+    "loanID": "07691373-e807-44c1-beda-51f805071d87"
+}
