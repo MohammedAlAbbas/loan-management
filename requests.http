@@ -120,5 +120,21 @@ POST {{baseUrl}}/employee/submitLoan
 Content-Type: application/json
 
 {
-    "loanID": "cc41e89d-0211-4cb1-a978-deba02fa937a"
+    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
+}
+
+### Approve Loan
+POST {{baseUrl}}/employee/approveLoan
+Content-Type: application/json
+
+{
+    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
+}
+
+### Reject Loan
+POST {{baseUrl}}/employee/rejectLoan
+Content-Type: application/json
+
+{
+    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
 }

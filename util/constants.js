@@ -8,7 +8,9 @@ module.exports = {
     },
 
     Actions: {
-        SUBMIT_LOAN: "submitLoan"
+        SUBMIT_LOAN: "submitLoan",
+        APPROVE_LOAN: "approveLoan",
+        REJECT_LOAN: "rejectLoan"
     }
 
 };

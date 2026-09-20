@@ -36,3 +36,9 @@ entity LoanApplications: managed {
 
 
 }
+
+entity LoanStatusTransitions {
+    key fromStatus : Association to one LoanStatuses;
+    key action     : String(20);
+        toStatus   : Association to one LoanStatuses;
+}

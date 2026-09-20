@@ -1,0 +1,6 @@
+fromStatus_code,action,toStatus_code
+D,submitLoan,S
+S,approveLoan,A
+R,approveLoan,A
+R,submitLoan, S
+S,rejectLoan,R
