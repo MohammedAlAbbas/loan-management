@@ -46,7 +46,7 @@ module.exports = cds.service.impl(function () {
             return req.reject(404, "Loan not found");
         }
 
-        await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.SUBMIT_LOAN );
+        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.SUBMIT_LOAN );
 
         await UPDATE("loan.management.LoanApplications")
             .set({
@@ -55,6 +55,14 @@ module.exports = cds.service.impl(function () {
             .where({
                 ID: loanID
             });
+
+        await StatusTransition.addLoanStatusHistory(
+            req,
+            loanID,
+            loan.status_code,
+            transition.toStatus_code,
+            Constants.Actions.SUBMIT_LOAN
+        );
 
         return SELECT.one.from("loan.management.LoanApplications")
                 .where({ ID: loanID });
@@ -72,7 +80,7 @@ module.exports = cds.service.impl(function () {
             return req.reject(404, "Loan not found");
         }
 
-        await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.APPROVE_LOAN );
+        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.APPROVE_LOAN );
 
         await UPDATE("loan.management.LoanApplications")
             .set({
@@ -81,6 +89,14 @@ module.exports = cds.service.impl(function () {
             .where({
                 ID: loanID
             });
+
+        await StatusTransition.addLoanStatusHistory(
+            req,
+            loanID,
+            loan.status_code,
+            transition.toStatus_code,
+            Constants.Actions.APPROVE_LOAN
+        );
 
         return SELECT.one.from("loan.management.LoanApplications")
                 .where({ ID: loanID });
@@ -98,7 +114,7 @@ module.exports = cds.service.impl(function () {
             return req.reject(404, "Loan not found");
         }
 
-        await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.REJECT_LOAN );
+        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.REJECT_LOAN );
 
         await UPDATE("loan.management.LoanApplications")
             .set({
@@ -107,6 +123,14 @@ module.exports = cds.service.impl(function () {
             .where({
                 ID: loanID
             });
+
+        await StatusTransition.addLoanStatusHistory(
+            req,
+            loanID,
+            loan.status_code,
+            transition.toStatus_code,
+            Constants.Actions.REJECT_LOAN
+        );
 
         return SELECT.one.from("loan.management.LoanApplications")
                 .where({ ID: loanID });

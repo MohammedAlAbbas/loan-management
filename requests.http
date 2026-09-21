@@ -135,7 +135,7 @@ Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
-    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
+    "loanID": "3f5dd8bf-9aae-4651-a203-61bb762881c9"
 }
 
 ### Approve Loan
@@ -144,7 +144,7 @@ Authorization: Basic approver:approver
 Content-Type: application/json
 
 {
-    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
+    "loanID": "3f5dd8bf-9aae-4651-a203-61bb762881c9"
 }
 
 ### Reject Loan
@@ -152,5 +152,5 @@ POST {{baseUrl}}/employee/rejectLoan
 Content-Type: application/json
 
 {
-    "loanID": "91bfea71-048e-461e-9754-3595e525c0c8"
+    "loanID": "3f5dd8bf-9aae-4651-a203-61bb762881c9"
 }

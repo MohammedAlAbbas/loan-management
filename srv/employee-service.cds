@@ -25,6 +25,8 @@ service EmployeeService {
 
     entity LoanStatusTransitions as projection on db.LoanStatusTransitions;
 
+    entity LoanStatusHistory as projection on db.LoanStatusHistory;
+
     @restrict: [
         {
             grant: 'EXECUTE',

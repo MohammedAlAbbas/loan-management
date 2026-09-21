@@ -44,3 +44,14 @@ entity LoanStatusTransitions {
     key action     : String(20);
         toStatus   : Association to one LoanStatuses;
 }
+
+entity LoanStatusHistory : managed {
+    key ID         : UUID;
+
+        loan       : Association to one LoanApplications;
+
+        fromStatus : Association to one LoanStatuses;
+        toStatus   : Association to one LoanStatuses;
+
+        action     : String(20);
+}

@@ -24,7 +24,20 @@ async function validateTransition(req, fromStatus, action) {
     return transition;
 }
 
+async function addLoanStatusHistory(req, loanID, fromStatus, toStatus, action) {
+
+    await INSERT.into("loan.management.LoanStatusHistory").entries({
+        loan_ID: loanID,
+        fromStatus_code: fromStatus,
+        toStatus_code: toStatus,
+        action: action,
+        changedBy: req.user.id,
+        changedAt: new Date()
+    });
+}
+
 module.exports = {
     getTransition,
-    validateTransition
+    validateTransition,
+    addLoanStatusHistory
 };
