@@ -14,6 +14,22 @@
         "credentials": {
           "url": "db.sqlite"
         }
+      },
+      "auth": {
+        "users": {
+          "requester": {
+            "password": "requester",
+            "roles": [
+              "LoanRequester"
+            ]
+          },
+          "approver": {
+            "password": "approver",
+            "roles": [
+              "LoanApprover"
+            ]
+          }
+        }
       }
     }
   }

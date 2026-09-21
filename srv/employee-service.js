@@ -5,6 +5,12 @@ const StatusTransition = require("../util/status-transitions");
 
 module.exports = cds.service.impl(function () {
 
+    //before creating an employee:
+    this.before("CREATE", "Employees", req => {
+        if(req.user?.id) {
+            req.data.userId = req.user.id;
+        }
+    });
 
     this.before('CREATE', 'LoanApplications', async (req) => {
 

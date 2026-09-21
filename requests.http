@@ -17,6 +17,7 @@ GET {{baseUrl}}/employee/LoanApplications?$select=ID,amount,status&$filter=statu
 
 ### Create employee
 POST {{baseUrl}}/employee/Employees
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -27,7 +28,7 @@ Content-Type: application/json
 }
 
 ### Update employee
-PATCH {{baseUrl}}/employee/Employees(33333333-3333-3333-3333-333333333333)
+PATCH {{baseUrl}}/employee/Employees(11111111-1111-1111-1111-111111111111)
 Content-Type: application/json
 
 {
@@ -44,6 +45,7 @@ GET {{baseUrl}}/employee/LoanApplications?$expand=employee
 
 ### Create loan application
 POST {{baseUrl}}/employee/LoanApplications
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -52,11 +54,12 @@ Content-Type: application/json
     "purpose": "Personal Loan",
     "status_code": "D",
     "submittedAt": "2026-09-14T12:00:00Z",
-    "employee_ID": "11111111-1111-1111-1111-111111111111"
+    "employee_ID": "c97953d1-a16a-45ba-9c71-e1bb05a24fb1"
 }
 
 ### Create employee with 3 loan applications
 POST {{baseUrl}}/employee/Employees
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -91,6 +94,7 @@ Content-Type: application/json
 
 ### Test loan validation
 POST {{baseUrl}}/employee/LoanApplications
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -104,6 +108,7 @@ Content-Type: application/json
 
 ### Valid loan
 POST {{baseUrl}}/employee/LoanApplications
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -115,8 +120,18 @@ Content-Type: application/json
     "employee_ID": "11111111-1111-1111-1111-111111111111"
 }
 
+### Update Loan 
+PATCH {{baseUrl}}/employee/LoanApplications(842f2408-b6c4-422a-825b-fd8764c4bcb8)
+Authorization: Basic requester:requester
+Content-Type: application/json
+
+{
+    "amount": "70000"
+}
+
 ### Submit Loan
 POST {{baseUrl}}/employee/submitLoan
+Authorization: Basic requester:requester
 Content-Type: application/json
 
 {
@@ -125,6 +140,7 @@ Content-Type: application/json
 
 ### Approve Loan
 POST {{baseUrl}}/employee/approveLoan
+Authorization: Basic approver:approver
 Content-Type: application/json
 
 {
