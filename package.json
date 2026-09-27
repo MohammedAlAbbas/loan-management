@@ -1,7 +1,8 @@
 {
   "devDependencies": {
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "cds-plugin-ui5": "^0.17.0"
   },
   "dependencies": {
     "@cap-js/sqlite": "^2.4.0",
@@ -32,5 +33,15 @@
         }
       }
     }
-  }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "scripts": {
+    "watch-loan-management-ui": "cds watch --open loan.management.ui.loanmanagementui/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-loan-management-fe": "cds watch --open loan.management.fe.loanmanagementfe/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "sapux": [
+    "app/loan-management-fe"
+  ]
 }

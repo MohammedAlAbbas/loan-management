@@ -1,0 +1,23 @@
+{
+  "generationParameters": {
+    "generationDate": "Sun Sep 27 2026 09:54:28 GMT+0300 (Arabian Standard Time)",
+    "generatorPlatform": "CLI",
+    "serviceType": "Local CAP",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/odata/v4/employee/",
+    "appName": "loan-management-ui",
+    "appTitle": "Loan Application",
+    "appDescription": "cap project loan management application",
+    "appNamespace": "loan.management.ui",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.152.0",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.32.0",
+    "template": "Basic V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [],
+    "launchText": "To launch the generated app, start your CAP project:  and navigate to the following location in your browser:\n\nhttp://localhost:4004/loan-management-ui/webapp/index.html"
+  }
+}
