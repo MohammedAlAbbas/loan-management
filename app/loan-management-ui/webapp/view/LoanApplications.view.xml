@@ -11,8 +11,6 @@
 
             <Table
                 id="loanTable"
-                mode="Delete"
-                delete="onPressDeleteLoan"
                 items="{
                     path: '/LoanApplications',
                     parameters: {
@@ -53,6 +51,9 @@
                     <Column>
                         <Text text="Status"/>
                     </Column>
+                    <Column width="7rem" hAlign="End">
+                        <Text text="Actions" />
+                    </Column>
 
                 </columns>
 
@@ -75,6 +76,20 @@
                                 text="{status/text}"
                                 state="Information"
                                 tooltip="{status_code}"/>
+
+                            <HBox justifyContent="End">
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    tooltip="Edit Loan"
+                                    press=".onPressEditLoan" />
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    state="Negative"
+                                    tooltip="Delete Loan"
+                                    press=".onPressDeleteLoan" />
+                            </HBox>
 
                         </cells>
 
