@@ -28,9 +28,9 @@ entity LoanStatuses : managed {
 
 entity LoanApplications : managed {
     key ID          : UUID;
-        amount      : Decimal(15, 2);
-        currency    : String(3);
-        purpose     : String(255);
+        amount      : Decimal(15, 2) @mandatory;
+        currency    : String(3) @mandatory;
+        purpose     : String(255) @mandatory;
         submittedAt : Timestamp;
 
         status      : Association to one LoanStatuses;
