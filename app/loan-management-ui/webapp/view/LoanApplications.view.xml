@@ -1,6 +1,90 @@
-<mvc:View controllerName="loan.management.ui.loanmanagementui.controller.LoanApplications"
+<mvc:View
+    controllerName="loan.management.ui.loanmanagementui.controller.LoanApplications"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
+
+    <Page
+        id="page"
+        title="{i18n>title}">
+
+        <content>
+
+            <Table
+                id="loanTable"
+                mode="Delete"
+                items="{
+                    path: '/LoanApplications',
+                    parameters: {
+                        $expand: 'status'
+                    }
+                }">
+
+                <headerToolbar>
+                    <Toolbar>
+
+                        <Title
+                            text="Loan Applications"/>
+
+                        <ToolbarSpacer/>
+
+                        <Button
+                            text="New Loan"
+                            type="Emphasized"
+                            press=".onCreateLoan"/>
+
+                    </Toolbar>
+                </headerToolbar>
+
+                <columns>
+
+                    <Column>
+                        <Text text="Amount"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Currency"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Purpose"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Status"/>
+                    </Column>
+
+                </columns>
+
+                <items>
+
+                    <ColumnListItem>
+
+                        <cells>
+
+                            <Text
+                                text="{amount}"/>
+
+                            <Text
+                                text="{currency}"/>
+
+                            <Text
+                                text="{purpose}"/>
+
+                            <ObjectStatus
+                                text="{status/text}"
+                                state="Information"
+                                tooltip="{status_code}"/>
+
+                        </cells>
+
+                    </ColumnListItem>
+
+                </items>
+
+            </Table>
+
+        </content>
+
     </Page>
+
 </mvc:View>

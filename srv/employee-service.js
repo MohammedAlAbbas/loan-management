@@ -26,6 +26,27 @@ module.exports = cds.service.impl(function () {
             req.error(400, "Loan Currency must be SAR");
         }
 
+        // set initial status:
+        req.data.status_code = Constants.LoanStatus.DRAFT;    
+        
+        // link to employee id:
+        const userId = req.user.id;
+        console.log("Logged-in user:", req.user.id);
+        const employee = await SELECT.one
+                        .from("loan.management.Employees")
+                        .where({ userId: userId });
+
+        if (!employee) {
+            // req.error(
+            //     400,
+            //     "No employee record found for the logged-in user."
+            // );
+            // return;
+            req.data.employee_ID = '11111111-1111-1111-1111-111111111111';
+        } else {
+            req.data.employee_ID = employee.ID;
+        }
+
     });
     
     this.after("CREATE", "LoanApplications", async (loan, req) => {

@@ -82,7 +82,13 @@
         "settings": {
           "operationMode": "Server",
           "autoExpandSelect": true,
-          "earlyRequests": true
+          "earlyRequests": true,
+          "updateGroupId": "update",
+          "groupProperties": {
+                "myApiGroup": {
+                    "submit": "API"
+                }
+            }
         }
       }
     },

@@ -4,21 +4,21 @@ service EmployeeService {
 
     entity Employees as projection on db.Employees;
 
-    @restrict: [
-        {
-            grant: 'READ',
-            to: ['LoanRequester', 'LoanApprover']
-        },
-        {
-            grant: 'CREATE',
-            to: 'LoanRequester'
-        },
-        {
-            grant: 'UPDATE',
-            to: 'LoanRequester',
-            where: 'employee.userId = $user.id'
-        }
-    ]
+    // @restrict: [
+    //     {
+    //         grant: 'READ',
+    //         to: ['LoanRequester', 'LoanApprover']
+    //     },
+    //     {
+    //         grant: 'CREATE',
+    //         to: 'LoanRequester'
+    //     },
+    //     {
+    //         grant: 'UPDATE',
+    //         to: 'LoanRequester',
+    //         where: 'employee.userId = $user.id'
+    //     }
+    // ]
     entity LoanApplications as projection on db.LoanApplications;
 
     entity LoanStatuses as projection on db.LoanStatuses;
