@@ -36,7 +36,7 @@ sap.ui.define([
 
                 // Pass empty strings/defaults rather than null so the framework tracks active property keys
                 const oContext = oListBinding.create({
-                    amount: "",
+                    amount: "0.00",
                     currency: "SAR",
                     purpose: ""
                 }, true, {
