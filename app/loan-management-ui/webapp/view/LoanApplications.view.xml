@@ -12,6 +12,7 @@
             <Table
                 id="loanTable"
                 mode="Delete"
+                delete="onPressDeleteLoan"
                 items="{
                     path: '/LoanApplications',
                     parameters: {

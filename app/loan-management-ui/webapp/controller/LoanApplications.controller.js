@@ -90,19 +90,60 @@ sap.ui.define([
                     }
                 });
             },
-            // ============================================================
-            // Cancel
-            // ============================================================
 
             onCreateLoanCancel: function () {
-
-                if (this._bCreatingLoan) {
-                    return;
-                }
-
                 if (this._oCreateLoanDialog) {
                     this._oCreateLoanDialog.close();
                 }
+            },
+            // ============================================================
+            // Delete Loan
+            // ============================================================
+            onPressDeleteLoan: function (oEvent) {
+                // 1. Get the item and its binding context
+                const oItem = oEvent.getParameter("listItem");
+                const oContext = oItem.getBindingContext();
+
+                if (!oContext) {
+                    return;
+                }
+
+                const sPurpose = oContext.getProperty("purpose");
+
+                // 2. Prompt user for confirmation
+                MessageBox.confirm(`Are you sure you want to delete "${sPurpose}"?`, {
+                    title: "Delete Loan Application",
+                    actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
+                    emphasizedAction: MessageBox.Action.DELETE,
+                    onClose: (sAction) => {
+                        if (sAction === MessageBox.Action.DELETE) {
+                            this._executeDelete(oContext);
+                        }
+                    }
+                });
+            },
+            _executeDelete: function (oContext) {
+                const oModel = this.getView().getModel();
+                const oMessageManager = sap.ui.getCore().getMessageManager();
+                const sUpdateGroupId = oModel.getUpdateGroupId();
+
+                oMessageManager.removeAllMessages();
+
+                // 1. Queue the deletion in the context's update group
+                oContext.delete(sUpdateGroupId).then(() => {
+                    // Success handler: executes when backend completes the DELETE operation
+                    MessageToast.show("Loan application deleted successfully.");
+                }).catch((oError) => {
+                    // Error handler: executes if backend rejects deletion (e.g. status constraint/FK violation)
+                    const aMessages = oMessageManager.getMessageModel().getData();
+                    const oErrorMsg = aMessages.find(m => m.getType() === "Error") || aMessages[0];
+                    const sMsg = oErrorMsg ? oErrorMsg.getMessage() : (oError ? oError.message : "Deletion failed.");
+
+                    MessageBox.error(sMsg);
+                });
+
+                // 2. EXPLICITLY SUBMIT BATCH to send the queued DELETE request to the backend
+                oModel.submitBatch(sUpdateGroupId);
             }
         }
     );
