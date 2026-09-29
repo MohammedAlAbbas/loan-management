@@ -55,45 +55,41 @@ sap.ui.define([
                 const oDialog = this._oCreateLoanDialog;
                 const oContext = this._oCreateContext;
 
-                if (!oContext || this._bCreatingLoan) {
+                if (!oContext) {
                     return;
                 }
 
                 oMessageManager.removeAllMessages();
-                this._bCreatingLoan = true;
                 oDialog.setBusy(true);
 
                 const sUpdateGroupId = oModel.getUpdateGroupId();
 
-                // Attach to created() promise
+                // Success handler: close dialog on successful context creation
                 oContext.created().then(() => {
                     MessageToast.show("Loan application submitted successfully!");
                     oDialog.close();
-                }).catch((oError) => {
-                    // Handled below if canceled or rejected
                 });
 
-                // submitBatch returns a Promise that resolves when the network batch completes
+                // Batch completion handler: handles busy state & backend error display
                 oModel.submitBatch(sUpdateGroupId).then(() => {
                     oDialog.setBusy(false);
-                    this._bCreatingLoan = false;
 
-                    // Check if the context is still transient (meaning creation failed on the backend)
                     if (oContext.isTransient()) {
                         const aMessages = oMessageManager.getMessageModel().getData();
-                        const oErrorMsg = aMessages.find(m => m.getType() === "Error");
-                        const sMsg = oErrorMsg ? oErrorMsg.getMessage() : "Backend validation failed.";
+                        const oErrorMsg = aMessages.find(m => m.getType() === "Error") || aMessages[0];
 
-                        MessageBox.error(sMsg);
+                        if (oErrorMsg && oErrorMsg.getMessage()) {
+                            MessageBox.error(oErrorMsg.getMessage());
+                        }
                     }
                 }).catch((oError) => {
-                    // Executes if network fails completely (500, Offline, CORS)
                     oDialog.setBusy(false);
-                    this._bCreatingLoan = false;
-                    MessageBox.error(oError.message || "Network request failed.");
+
+                    if (oError && oError.message) {
+                        MessageBox.error(oError.message);
+                    }
                 });
             },
-
             // ============================================================
             // Cancel
             // ============================================================
