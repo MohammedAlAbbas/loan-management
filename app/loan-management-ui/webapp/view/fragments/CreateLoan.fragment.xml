@@ -12,20 +12,17 @@
 
                 <Label text="Amount" required="true" />
                 <Input
-                    id="amountInput"
                     value="{amount}"
                     valueLiveUpdate="true"
                     placeholder="Enter amount" />
 
                 <Label text="Currency" required="true" class="sapUiSmallMarginTop" />
                 <Input
-                    id="currencyInput"
                     value="{currency}"
                     valueLiveUpdate="true" />
 
                 <Label text="Purpose" required="true" class="sapUiSmallMarginTop" />
                 <Input
-                    id="purposeInput"
                     value="{purpose}"
                     valueLiveUpdate="true"
                     placeholder="Enter loan purpose" />
