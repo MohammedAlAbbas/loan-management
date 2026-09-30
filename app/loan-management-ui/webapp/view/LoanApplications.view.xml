@@ -90,7 +90,6 @@
                                 <Button
                                     icon="sap-icon://accept"
                                     type="Transparent"
-                                    state="Success"
                                     tooltip="Approve Loan"
                                     press=".onApproveLoan" />
 
@@ -98,7 +97,6 @@
                                 <Button
                                     icon="sap-icon://decline"
                                     type="Transparent"
-                                    state="Negative"
                                     tooltip="Reject Loan"
                                     press=".onRejectLoan" />
 
@@ -115,6 +113,12 @@
                                     state="Negative"
                                     tooltip="Delete Loan"
                                     press=".onPressDeleteLoan" />
+
+                                    <Button
+                                    icon="sap-icon://history"
+                                    type="Transparent"
+                                    tooltip="Status History"
+                                    press=".onStatusHistoryPress" />
                             </HBox>
 
                         </cells>

@@ -5,7 +5,8 @@
     <Dialog
         id="createLoanDialog"
         title="New Loan Application"
-        contentWidth="30rem">
+        contentWidth="30rem"
+        afterClose=".onCreateDialogAfterClose">
 
         <content>
             <VBox class="sapUiMediumMargin">

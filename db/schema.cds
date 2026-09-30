@@ -35,6 +35,7 @@ entity LoanApplications : managed {
 
         status      : Association to one LoanStatuses;
         employee    : Association to one Employees;
+        statusHistory : Composition of many LoanStatusHistory on statusHistory.loan = $self;
 
 
 }

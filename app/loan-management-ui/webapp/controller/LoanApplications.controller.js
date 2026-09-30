@@ -92,7 +92,16 @@ sap.ui.define([
                     }
                 });
             },
-
+            onCreateDialogAfterClose: function (oEvent) {
+                if (this._oCreateContext && this._oCreateContext.isTransient()) {
+                    const sGroupId = this.getView().getModel().getUpdateGroupId();
+                    
+                    // Pass the same groupId used during creation
+                    this._oCreateContext.delete(sGroupId);
+                    
+                    this._oCreateContext = null;
+                }
+            },
             onCreateLoanCancel: function () {
                 if (this._oCreateLoanDialog) {
                     this._oCreateLoanDialog.close();
@@ -190,6 +199,29 @@ sap.ui.define([
                     this._oEditLoanDialog.setBusy(false);
                     this._oEditLoanDialog.close();
                 }
+            },
+             // ============================================================
+            //  Loan History
+            // ============================================================
+            onStatusHistoryPress: async function (oEvent) {
+                const oButton = oEvent.getSource();
+                const oContext = oButton.getBindingContext();
+
+                if (!this._oLoanStatusHistoryDialog) {
+                    this._oLoanStatusHistoryDialog = await sap.ui.core.Fragment.load({
+                        name: "loan.management.ui.loanmanagementui.view.fragments.LoanStatusHistoryDialog",
+                        controller: this
+                    });
+
+                    this.getView().addDependent(this._oLoanStatusHistoryDialog);
+                }
+
+                this._oLoanStatusHistoryDialog.setBindingContext(oContext);
+
+                this._oLoanStatusHistoryDialog.open();
+            },
+            onStatusHistoryClose: function () {
+                this._oLoanStatusHistoryDialog.close();
             },
             // ============================================================
             // Delete Loan
