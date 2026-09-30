@@ -51,7 +51,7 @@
                     <Column>
                         <Text text="Status"/>
                     </Column>
-                    <Column width="7rem" hAlign="End">
+                    <Column width="15rem" hAlign="Center">
                         <Text text="Actions" />
                     </Column>
 
@@ -74,10 +74,36 @@
 
                             <ObjectStatus
                                 text="{status/text}"
-                                state="Information"
-                                tooltip="{status_code}"/>
+                                state="{= ${status_code} === 'A' ? 'Success' : ${status_code} === 'R' ? 'Error' : ${status_code} === 'S' ? 'Information' : ${status_code} === 'D' ? 'Warning' : 'None'}" 
+                                tooltip="{status_code}"
+                                inverted="true"/>
 
                             <HBox justifyContent="End">
+                                <!-- Submit Action (Draft -> Submitted) -->
+                                <Button
+                                    icon="sap-icon://paper-plane"
+                                    type="Transparent"
+                                    tooltip="Submit Loan"
+                                    press=".onSubmitLoan" />
+
+                                <!-- Approve Action (Submitted -> Approved) -->
+                                <Button
+                                    icon="sap-icon://accept"
+                                    type="Transparent"
+                                    state="Success"
+                                    tooltip="Approve Loan"
+                                    press=".onApproveLoan" />
+
+                                <!-- Reject Action (Submitted -> Rejected) -->
+                                <Button
+                                    icon="sap-icon://decline"
+                                    type="Transparent"
+                                    state="Negative"
+                                    tooltip="Reject Loan"
+                                    press=".onRejectLoan" />
+
+                                <!-- Standard Edit / Delete -->
+
                                 <Button
                                     icon="sap-icon://edit"
                                     type="Transparent"

@@ -5,9 +5,11 @@ const StatusTransition = require("../util/status-transitions");
 
 module.exports = cds.service.impl(function () {
 
+    const { LoanApplications } = this.entities;
+
     //before creating an employee:
     this.before("CREATE", "Employees", req => {
-        if(req.user?.id) {
+        if (req.user?.id) {
             req.data.userId = req.user.id;
         }
     });
@@ -27,14 +29,14 @@ module.exports = cds.service.impl(function () {
         }
 
         // set initial status:
-        req.data.status_code = Constants.LoanStatus.DRAFT;    
-        
+        req.data.status_code = Constants.LoanStatus.DRAFT;
+
         // link to employee id:
         const userId = req.user.id;
         console.log("Logged-in user:", req.user.id);
         const employee = await SELECT.one
-                        .from("loan.management.Employees")
-                        .where({ userId: userId });
+            .from("loan.management.Employees")
+            .where({ userId: userId });
 
         if (!employee) {
             // req.error(
@@ -48,7 +50,7 @@ module.exports = cds.service.impl(function () {
         }
 
     });
-    
+
     this.after("CREATE", "LoanApplications", async (loan, req) => {
 
         console.log("Created loan:", loan);
@@ -56,26 +58,34 @@ module.exports = cds.service.impl(function () {
 
     });
 
-    // On Submit Loan Action:
-    this.on(Constants.Actions.SUBMIT_LOAN, async (req) => {
-        const { loanID } = req.data;
-        const loan = await SELECT.one
-                            .from("loan.management.LoanApplications")
-                            .where({ ID: loanID });
+    //////////////////// Actions //////////////////////////////
 
-        if(!loan) {
+
+    // ==========================================
+    // On Submit Loan Action (Bound)
+    // ==========================================
+    this.on(Constants.Actions.SUBMIT_LOAN, LoanApplications, async (req) => {
+        // 1. Extract loanID from req.params (NOT req.data)
+        const loanID = req.params[0]?.ID;
+
+        // 2. Query target using service projection
+        const loan = await SELECT.one.from(LoanApplications).where({ ID: loanID });
+
+        if (!loan) {
             return req.reject(404, "Loan not found");
         }
 
-        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.SUBMIT_LOAN );
+        const transition = await StatusTransition.validateTransition(
+            req,
+            loan.status_code,
+            Constants.Actions.SUBMIT_LOAN
+        );
 
-        await UPDATE("loan.management.LoanApplications")
+        await UPDATE(LoanApplications)
             .set({
                 status_code: Constants.LoanStatus.SUBMITTED
             })
-            .where({
-                ID: loanID
-            });
+            .where({ ID: loanID });
 
         await StatusTransition.addLoanStatusHistory(
             req,
@@ -85,31 +95,32 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.SUBMIT_LOAN
         );
 
-        return SELECT.one.from("loan.management.LoanApplications")
-                .where({ ID: loanID });
-
+        return SELECT.from(req.query);
     });
 
-    // On Approve Loan Action:
-    this.on(Constants.Actions.APPROVE_LOAN, async (req) => {
-        const { loanID } = req.data;
-        const loan = await SELECT.one
-                            .from("loan.management.LoanApplications")
-                            .where({ ID: loanID });
+    // ==========================================
+    // On Approve Loan Action (Bound)
+    // ==========================================
+    this.on(Constants.Actions.APPROVE_LOAN, LoanApplications, async (req) => {
+        const loanID = req.params[0]?.ID;
 
-        if(!loan) {
+        const loan = await SELECT.one.from(LoanApplications).where({ ID: loanID });
+
+        if (!loan) {
             return req.reject(404, "Loan not found");
         }
 
-        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.APPROVE_LOAN );
+        const transition = await StatusTransition.validateTransition(
+            req,
+            loan.status_code,
+            Constants.Actions.APPROVE_LOAN
+        );
 
-        await UPDATE("loan.management.LoanApplications")
+        await UPDATE(LoanApplications)
             .set({
                 status_code: Constants.LoanStatus.APPROVED
             })
-            .where({
-                ID: loanID
-            });
+            .where({ ID: loanID });
 
         await StatusTransition.addLoanStatusHistory(
             req,
@@ -119,31 +130,33 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.APPROVE_LOAN
         );
 
-        return SELECT.one.from("loan.management.LoanApplications")
-                .where({ ID: loanID });
-
+        return SELECT.from(req.query);
     });
 
-    // On Reject Loan Action:
-    this.on(Constants.Actions.REJECT_LOAN, async (req) => {
-        const { loanID } = req.data;
-        const loan = await SELECT.one
-                            .from("loan.management.LoanApplications")
-                            .where({ ID: loanID });
+    // ==========================================
+    // On Reject Loan Action (Bound)
+    // ==========================================
+    this.on(Constants.Actions.REJECT_LOAN, LoanApplications, async (req) => {
+        const loanID = req.params[0]?.ID;
+        const { reason } = req.data; // Custom parameters (like reason) still come from req.data!
 
-        if(!loan) {
+        const loan = await SELECT.one.from(LoanApplications).where({ ID: loanID });
+
+        if (!loan) {
             return req.reject(404, "Loan not found");
         }
 
-        const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.REJECT_LOAN );
+        const transition = await StatusTransition.validateTransition(
+            req,
+            loan.status_code,
+            Constants.Actions.REJECT_LOAN
+        );
 
-        await UPDATE("loan.management.LoanApplications")
+        await UPDATE(LoanApplications)
             .set({
                 status_code: Constants.LoanStatus.REJECTED
             })
-            .where({
-                ID: loanID
-            });
+            .where({ ID: loanID });
 
         await StatusTransition.addLoanStatusHistory(
             req,
@@ -153,10 +166,110 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.REJECT_LOAN
         );
 
-        return SELECT.one.from("loan.management.LoanApplications")
-                .where({ ID: loanID });
-
+        return SELECT.from(req.query);
     });
+
+    // // On Submit Loan Action:
+    // this.on(Constants.Actions.SUBMIT_LOAN, async (req) => {
+    //     const { loanID } = req.data;
+    //     const loan = await SELECT.one
+    //                         .from("loan.management.LoanApplications")
+    //                         .where({ ID: loanID });
+
+    //     if(!loan) {
+    //         return req.reject(404, "Loan not found");
+    //     }
+
+    //     const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.SUBMIT_LOAN );
+
+    //     await UPDATE("loan.management.LoanApplications")
+    //         .set({
+    //             status_code: Constants.LoanStatus.SUBMITTED
+    //         })
+    //         .where({
+    //             ID: loanID
+    //         });
+
+    //     await StatusTransition.addLoanStatusHistory(
+    //         req,
+    //         loanID,
+    //         loan.status_code,
+    //         transition.toStatus_code,
+    //         Constants.Actions.SUBMIT_LOAN
+    //     );
+
+    //     return SELECT.one.from("loan.management.LoanApplications")
+    //             .where({ ID: loanID });
+
+    // });
+
+    // // On Approve Loan Action:
+    // this.on(Constants.Actions.APPROVE_LOAN, async (req) => {
+    //     const { loanID } = req.data;
+    //     const loan = await SELECT.one
+    //                         .from("loan.management.LoanApplications")
+    //                         .where({ ID: loanID });
+
+    //     if(!loan) {
+    //         return req.reject(404, "Loan not found");
+    //     }
+
+    //     const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.APPROVE_LOAN );
+
+    //     await UPDATE("loan.management.LoanApplications")
+    //         .set({
+    //             status_code: Constants.LoanStatus.APPROVED
+    //         })
+    //         .where({
+    //             ID: loanID
+    //         });
+
+    //     await StatusTransition.addLoanStatusHistory(
+    //         req,
+    //         loanID,
+    //         loan.status_code,
+    //         transition.toStatus_code,
+    //         Constants.Actions.APPROVE_LOAN
+    //     );
+
+    //     return SELECT.one.from("loan.management.LoanApplications")
+    //             .where({ ID: loanID });
+
+    // });
+
+    // // On Reject Loan Action:
+    // this.on(Constants.Actions.REJECT_LOAN, async (req) => {
+    //     const { loanID } = req.data;
+    //     const loan = await SELECT.one
+    //                         .from("loan.management.LoanApplications")
+    //                         .where({ ID: loanID });
+
+    //     if(!loan) {
+    //         return req.reject(404, "Loan not found");
+    //     }
+
+    //     const transition = await StatusTransition.validateTransition(req, loan.status_code, Constants.Actions.REJECT_LOAN );
+
+    //     await UPDATE("loan.management.LoanApplications")
+    //         .set({
+    //             status_code: Constants.LoanStatus.REJECTED
+    //         })
+    //         .where({
+    //             ID: loanID
+    //         });
+
+    //     await StatusTransition.addLoanStatusHistory(
+    //         req,
+    //         loanID,
+    //         loan.status_code,
+    //         transition.toStatus_code,
+    //         Constants.Actions.REJECT_LOAN
+    //     );
+
+    //     return SELECT.one.from("loan.management.LoanApplications")
+    //             .where({ ID: loanID });
+
+    // });
 
 
 });

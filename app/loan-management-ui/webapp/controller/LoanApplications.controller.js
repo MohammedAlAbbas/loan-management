@@ -2,12 +2,14 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "sap/ui/core/Messaging"
 ], function (
     Controller,
     MessageToast,
     MessageBox,
-    Fragment
+    Fragment,
+    Messaging
 ) {
     "use strict";
 
@@ -237,6 +239,118 @@ sap.ui.define([
 
                 // 2. EXPLICITLY SUBMIT BATCH to send the queued DELETE request to the backend
                 oModel.submitBatch(sUpdateGroupId);
+            },
+
+            // ==========================================
+            // LIFECYCLE ACTIONS (Submit, Approve, Reject)
+            // ==========================================
+
+            // ==========================================
+            // ACTION BUTTON HANDLERS
+            // ==========================================
+
+            onSubmitLoan: function (oEvent) {
+                // 1. Get the binding context of the selected row
+                const oContext = oEvent.getSource().getBindingContext();
+                if (!oContext) return;
+
+                MessageBox.confirm("Are you sure you want to submit this loan application?", {
+                    title: "Submit Loan",
+                    onClose: (sAction) => {
+                        if (sAction === MessageBox.Action.OK) {
+                            this._executeBoundAction(
+                                oContext,
+                                "EmployeeService.submitLoan",
+                                "Loan application submitted successfully!"
+                            );
+                        }
+                    }
+                });
+            },
+
+            onApproveLoan: function (oEvent) {
+                const oContext = oEvent.getSource().getBindingContext();
+                if (!oContext) return;
+
+                MessageBox.confirm("Are you sure you want to approve this loan application?", {
+                    title: "Approve Loan",
+                    onClose: (sAction) => {
+                        if (sAction === MessageBox.Action.OK) {
+                            this._executeBoundAction(
+                                oContext,
+                                "EmployeeService.approveLoan",
+                                "Loan application approved successfully!"
+                            );
+                        }
+                    }
+                });
+            },
+
+            onRejectLoan: function (oEvent) {
+                const oContext = oEvent.getSource().getBindingContext();
+                if (!oContext) return;
+
+                // Prompt user for optional rejection reason
+                // (Or call directly with a default parameter)
+                this._executeBoundAction(
+                    oContext,
+                    "EmployeeService.rejectLoan",
+                    "Loan application rejected.",
+                    { reason: "Rejected via Manager Review" }
+                );
+            },
+
+            // ==========================================
+            // REUSABLE BOUND ACTION HELPER
+            // ==========================================
+
+            /**
+             * Helper to call OData V4 Bound Action
+             * @param {sap.ui.model.odata.v4.Context} oContext Selected row context
+             * @param {string} sActionName Service.ActionName (e.g. "EmployeeService.submitLoan")
+             * @param {string} sSuccessMessage Message Toast text
+             * @param {object} [mParameters] Custom parameters (e.g. { reason: "..." })
+             */
+            _executeBoundAction: function (oContext, sActionName, sSuccessMessage, mParameters) {
+                const oModel = this.getView().getModel();
+                const oView = this.getView();
+
+                Messaging.removeAllMessages();
+                oView.setBusy(true);
+
+                // 1. Bind context relative to the row context (oContext)
+                // Generates path: /LoanApplications(ID=...)/EmployeeService.submitLoan(...)
+                const oActionBinding = oModel.bindContext(`${sActionName}(...)`, oContext);
+
+                // 2. Set custom parameters (like reason for rejection) if provided
+                if (mParameters) {
+                    Object.keys(mParameters).forEach((sKey) => {
+                        oActionBinding.setParameter(sKey, mParameters[sKey]);
+                    });
+                }
+
+                // 3. Execute HTTP POST
+                oActionBinding.execute().then(() => {
+                    oView.setBusy(false);
+                    sap.m.MessageToast.show(sSuccessMessage);
+
+                    // 4. Refresh row data so table updates status immediately
+                    oContext.refresh();
+                }).catch((oError) => {
+                    oView.setBusy(false);
+
+                    // Handle error messages from CAP backend
+                    const aMessages = Messaging.getMessageModel().getData();
+                    const oErrorMsg = aMessages.find(m => m.getType() === "Error") || aMessages[0];
+
+                    if (oErrorMsg && oErrorMsg.getMessage()) {
+                        sap.m.MessageBox.error(oErrorMsg.getMessage());
+                    } else if (oError && oError.message) {
+                        sap.m.MessageBox.error(oError.message);
+                    } else {
+                        sap.m.MessageBox.error("Action execution failed.");
+                    }
+                });
             }
         }
     );

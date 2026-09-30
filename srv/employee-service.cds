@@ -19,7 +19,22 @@ service EmployeeService {
     //         where: 'employee.userId = $user.id'
     //     }
     // ]
-    entity LoanApplications as projection on db.LoanApplications;
+    entity LoanApplications as projection on db.LoanApplications actions {
+
+        // @restrict: [
+        //     {
+        //         grant: 'EXECUTE',
+        //         to: 'LoanRequester'
+        //     }
+        // ]
+        action submitLoan() returns LoanApplications;
+
+        // @requires: 'LoanApprover'
+        action approveLoan() returns LoanApplications;
+
+        action rejectLoan(reason: String) returns LoanApplications;
+
+    };
 
     entity LoanStatuses as projection on db.LoanStatuses;
 
@@ -27,17 +42,17 @@ service EmployeeService {
 
     entity LoanStatusHistory as projection on db.LoanStatusHistory;
 
-    @restrict: [
-        {
-            grant: 'EXECUTE',
-            to: 'LoanRequester'
-        }
-    ]
-    action submitLoan(loanID: UUID) returns LoanApplications;
+    // @restrict: [
+    //     {
+    //         grant: 'EXECUTE',
+    //         to: 'LoanRequester'
+    //     }
+    // ]
+    // action submitLoan(loanID: UUID) returns LoanApplications;
 
-    @requires: 'LoanApprover'
-    action approveLoan(loanID: UUID) returns LoanApplications;
+    // @requires: 'LoanApprover'
+    // action approveLoan(loanID: UUID) returns LoanApplications;
 
-    action rejectLoan(loanID: UUID) returns LoanApplications;
+    // action rejectLoan(loanID: UUID) returns LoanApplications;
 
 }
