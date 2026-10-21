@@ -1,7 +1,7 @@
 const cds = require("@sap/cds");
 const { SELECT, UPDATE } = require("@sap/cds/lib/ql/cds-ql");
-const Constants = require("../util/constants");
-const StatusTransition = require("../util/status-transitions");
+const Constants = require("./util/constants");
+const StatusTransition = require("./util/status-transitions");
 
 module.exports = cds.service.impl(function () {
 
@@ -95,7 +95,9 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.SUBMIT_LOAN
         );
 
-        return SELECT.from(req.query);
+        // return SELECT.from(req.query);
+        const loanFinal = await SELECT.one.from(LoanApplications).where({ ID: loanID });
+        return loanFinal;
     });
 
     // ==========================================
@@ -130,7 +132,7 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.APPROVE_LOAN
         );
 
-        return SELECT.from(req.query);
+        return loan;
     });
 
     // ==========================================
@@ -166,7 +168,7 @@ module.exports = cds.service.impl(function () {
             Constants.Actions.REJECT_LOAN
         );
 
-        return SELECT.from(req.query);
+        return loan;
     });
 
     // // On Submit Loan Action:

@@ -1,12 +1,15 @@
 {
   "devDependencies": {
+    "@sap/cds-dk": "^10",
+    "cds-plugin-ui5": "^0.17.0",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2",
-    "cds-plugin-ui5": "^0.17.0"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@cap-js/sqlite": "^2.4.0",
-    "@sap/cds": "^10.1.0"
+    "@cap-js/hana": "^3",
+    "@cap-js/sqlite": "^3.1.1",
+    "@sap/cds": "^10.1.0",
+    "@sap/xssec": "^4"
   },
   "cds": {
     "requires": {
@@ -31,17 +34,26 @@
             ]
           }
         }
-      }
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana"
+        },
+        "auth": {
+          "kind": "xsuaa"
+        }
+      },
+      "html5-repo": true
     }
   },
   "workspaces": [
     "app/*"
   ],
   "scripts": {
-    "watch-loan-management-ui": "cds watch --open loan.management.ui.loanmanagementui/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-loan-management-fe": "cds watch --open loan.management.fe.loanmanagementfe/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "start": "cds-serve",
+    "watch-loan-management-ui": "cds watch --open loan.management.ui.loanmanagementui/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "sapux": [
-    "app/loan-management-fe"
+    "app/loan-management-ui"
   ]
 }

@@ -13,7 +13,7 @@ mta_archives/
 *.mtar
 
 # Other
-.DS_Store
+.DS_Storeclea
 
 # @cap-js/cds-typer
 @cds-models

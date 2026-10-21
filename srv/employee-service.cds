@@ -1,5 +1,6 @@
 using { loan.management as db } from '../db/schema';
 
+@requires: 'LoanApprover'
 service EmployeeService {
 
     entity Employees as projection on db.Employees;

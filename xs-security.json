@@ -1,0 +1,42 @@
+{
+  "xsappname": "loan-management",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.LoanRequester",
+      "description": "Loan Requester"
+    },
+    {
+      "name": "$XSAPPNAME.LoanApprover",
+      "description": "Loan Approver"
+    },
+    {
+      "name": "$XSAPPNAME.LoanApprover",
+      "description": "LoanApprover"
+    },
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "LoanRequester",
+      "description": "Can create and submit loan applications",
+      "scope-references": [
+        "$XSAPPNAME.LoanRequester"
+      ]
+    },
+    {
+      "name": "LoanApprover",
+      "description": "Can approve and reject loan applications",
+      "scope-references": [
+        "$XSAPPNAME.LoanApprover"
+      ]
+    }
+  ]
+}

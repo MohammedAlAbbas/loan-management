@@ -1,0 +1,136 @@
+<mvc:View
+    controllerName="loan.management.ui.loanmanagementui.controller.LoanApplications"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="page"
+        title="{i18n>title}">
+
+        <content>
+
+            <Table
+                id="loanTable"
+                items="{
+                    path: '/LoanApplications',
+                    parameters: {
+                        $expand: 'status'
+                    }
+                }">
+
+                <headerToolbar>
+                    <Toolbar>
+
+                        <Title
+                            text="Loan Applications"/>
+
+                        <ToolbarSpacer/>
+
+                        <Button
+                            text="New Loan"
+                            type="Emphasized"
+                            press=".onCreateLoan"/>
+
+                    </Toolbar>
+                </headerToolbar>
+
+                <columns>
+
+                    <Column>
+                        <Text text="Amount"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Currency"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Purpose"/>
+                    </Column>
+
+                    <Column>
+                        <Text text="Status"/>
+                    </Column>
+                    <Column width="15rem" hAlign="Center">
+                        <Text text="Actions" />
+                    </Column>
+
+                </columns>
+
+                <items>
+
+                    <ColumnListItem>
+
+                        <cells>
+
+                            <Text
+                                text="{amount}"/>
+
+                            <Text
+                                text="{currency}"/>
+
+                            <Text
+                                text="{purpose}"/>
+
+                            <ObjectStatus
+                                text="{status/text}"
+                                state="{= ${status_code} === 'A' ? 'Success' : ${status_code} === 'R' ? 'Error' : ${status_code} === 'S' ? 'Information' : ${status_code} === 'D' ? 'Warning' : 'None'}" 
+                                tooltip="{status_code}"
+                                inverted="true"/>
+
+                            <HBox justifyContent="End">
+                                <!-- Submit Action (Draft -> Submitted) -->
+                                <Button
+                                    icon="sap-icon://paper-plane"
+                                    type="Transparent"
+                                    tooltip="Submit Loan"
+                                    press=".onSubmitLoan" />
+
+                                <!-- Approve Action (Submitted -> Approved) -->
+                                <Button
+                                    icon="sap-icon://accept"
+                                    type="Transparent"
+                                    tooltip="Approve Loan"
+                                    press=".onApproveLoan" />
+
+                                <!-- Reject Action (Submitted -> Rejected) -->
+                                <Button
+                                    icon="sap-icon://decline"
+                                    type="Transparent"
+                                    tooltip="Reject Loan"
+                                    press=".onRejectLoan" />
+
+                                <!-- Standard Edit / Delete -->
+
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    tooltip="Edit Loan"
+                                    press=".onPressEditLoan" />
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    state="Negative"
+                                    tooltip="Delete Loan"
+                                    press=".onPressDeleteLoan" />
+
+                                    <Button
+                                    icon="sap-icon://history"
+                                    type="Transparent"
+                                    tooltip="Status History"
+                                    press=".onStatusHistoryPress" />
+                            </HBox>
+
+                        </cells>
+
+                    </ColumnListItem>
+
+                </items>
+
+            </Table>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

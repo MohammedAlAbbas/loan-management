@@ -1,0 +1,79 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:commons="sap.suite.ui.commons">
+
+    <Dialog
+        id="loanStatusHistoryDialog"
+        title="Loan Status History"
+        contentWidth="750px"
+        contentHeight="550px"
+        draggable="true"
+        resizable="true"
+        stretchOnPhone="true"
+        horizontalScrolling="false">
+
+        <content>
+
+            <VBox
+                width="100%"
+                class="sapUiMediumMargin">
+
+                <Title
+                    text="Status History"
+                    level="H4"
+                    class="sapUiSmallMarginBottom" />
+
+            </VBox>
+
+                <commons:Timeline
+                    id="loanStatusTimeline"
+                    content="{
+                        path: 'statusHistory',
+                        parameters: {
+                            $expand: 'fromStatus($select=code,text),toStatus($select=code,text)'
+                        }
+                    }"
+                    showHeaderBar="false"
+                    showSearch="false"
+                    showIcons="true"
+                    sort="true"
+                    sortOldestFirst="true"
+                    enableScroll="false">
+
+                    <commons:TimelineItem
+                        title="({action})"
+                        text="{= ${fromStatus/text} + ' → ' + ${toStatus/text} }"
+                        dateTime="{createdAt}"
+                        userName="{toStatus/text}"
+
+                        icon="{= ${toStatus/code} === 'A'
+                            ? 'sap-icon://accept'
+                            : ${toStatus/code} === 'R'
+                            ? 'sap-icon://decline'
+                            : ${toStatus/code} === 'S'
+                            ? 'sap-icon://paper-plane'
+                            : 'sap-icon://edit'}"
+
+                        status="{= ${toStatus/code} === 'A'
+                            ? 'Success'
+                            : ${toStatus/code} === 'R'
+                            ? 'Error'
+                            : ${toStatus/code} === 'S'
+                            ? 'Information'
+                            : 'Warning'}" />
+
+                </commons:Timeline>
+
+
+        </content>
+
+        <endButton>
+            <Button
+                text="Close"
+                press=".onStatusHistoryClose" />
+        </endButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>

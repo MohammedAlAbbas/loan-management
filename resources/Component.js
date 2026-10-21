@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/UIComponent","loan/management/ui/loanmanagementui/model/models"],(e,n)=>{"use strict";return e.extend("loan.management.ui.loanmanagementui.Component",{metadata:{manifest:"json",interfaces:["sap.ui.core.IAsyncContentCreation"]},init(){e.prototype.init.apply(this,arguments);this.setModel(n.createDeviceModel(),"device");this.getRouter().initialize()}})});
+//# sourceMappingURL=Component.js.map
